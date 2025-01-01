@@ -23,16 +23,13 @@ export const register = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if the email already exists
     const existingUser = await AdminUser.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already registered.' });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save the new admin user
     const newUser = new AdminUser({ email, password: hashedPassword });
     await newUser.save();
 
