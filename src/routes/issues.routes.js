@@ -1,9 +1,10 @@
-const express = require('express');
-const { createIssue, getAllIssues, updateIssue } = require('../controllers/issues.controller');
+import express from 'express';
+import { createIssue, getAllIssues, updateIssue } from '../controllers/issues.controller.js';
+import { auth } from '../middleware/auth.middleware.js';
 const router = express.Router();
 
-router.post('/create',createIssue);
-router.get('/getall',getAllIssues);
-router.patch('/update',updateIssue);
+router.post('/create', auth, createIssue);
+router.get('/getall', getAllIssues);
+router.patch('/update', updateIssue);
 
-module.exports = router;
+export default router;

@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import AdminUser from '../models/adminData.js';
+import jwt from 'jsonwebtoken';
 
-
-
+const jwtSecret = 'secret';
 export const signin = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -11,8 +11,8 @@ export const signin = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid email or password.' });
-
-    res.redirect('/issues/getall');
+    const token = jwt.sign({ email: user.email }, jwtSecret, { expiresIn: '1h' });
+    res.status(200).json({ message: 'Sign-in successful', token });
   } catch (error) {
     console.error('Sign-in error:', error);
     res.status(500).json({ message: 'Server error.' });
