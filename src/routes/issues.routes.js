@@ -4,7 +4,7 @@ import { auth } from '../middleware/auth.middleware.js';
 const router = express.Router();
 
 router.post('/create', auth, createIssue);
-router.get('/getall', getAllIssues);
-router.patch('/update', updateIssue);
+router.get('/getall', auth, getAllIssues);
+router.patch('/update', auth, updateIssue);
 
 export default router;

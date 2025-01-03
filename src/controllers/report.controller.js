@@ -33,35 +33,29 @@ export const getAllReports = async (req, res) => {
     }
 }
 export const updateReport = async (req, res) => {
-    const {
-        email,
-        status
-    } = req.body;
-    const validStatuses = ['pending', 'resolved', 'in-progress'];
+    const { id, status } = req.body;
+
+    const validStatuses = ['pending', 'resolved', 'under-review'];
     if (!validStatuses.includes(status)) {
         return res.status(400).json({
-        message: 'Invalid status value. Valid values are "pending", "resolved", and "in-progress".'
+            message: 'Invalid status value. Valid values are "pending", "resolved", and "under-review".',
         });
     }
+
     try {
-        const updatedReport = await Report.findOneAndUpdate({
-        email
-        }, {
-        status
-        }, {
-        new: true
-        });
+        const updatedReport = await Report.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
         if (!updatedReport) {
-        return res.status(404).json({
-            message: 'No report found with this email address.'
-        });
+            return res.status(404).json({ message: 'No report found with this ID.' });
         }
         res.json(updatedReport);
     } catch (error) {
         res.status(500).json({
-        message: 'Failed to update report status',
-        error
+            message: 'Failed to update report status',
+            error,
         });
     }
 };
-
